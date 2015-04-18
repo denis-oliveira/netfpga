@@ -2,7 +2,7 @@
 # $Id: Makefile 2397 2007-10-11 21:06:08Z grg $
 #
 
-CFLAGS = -g
+CFLAGS = -g -Wall -Werror
 CC = gcc
 LDFLAGS = -lnf2regs
 COMMON = ../common

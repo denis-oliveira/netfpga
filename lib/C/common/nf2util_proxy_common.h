@@ -1,8 +1,10 @@
-/*-
+
+/*
  * Copyright (c) 2006-2011 The Board of Trustees of The Leland Stanford Junior
  * University
  *
- * Author: Kumar Sanghvi <divinekumar@gmail.com>
+ * Author: Glen Gibb <grg@stanford.edu>
+ * Author: Denis Oliveira <denis dot oliveira at dc dot ufscar dot br>
  *
  * We are making the NetFPGA tools and associated documentation (Software)
  * available for public use and benefit with the expectation that others will
@@ -32,68 +34,37 @@
  * without specific, written prior permission.
  */
 
-/* ****************************************************************************
- * vim:set shiftwidth=2 softtabstop=2 expandtab:
- *
- * Module: nf2_ethtool.c
- * Project: NetFPGA 2 Linux Kernel Driver
- * Description: ethtool functionality
- */
+#ifndef _NF2UTIL_PROXY_COMMON_H
+#define _NF2UTIL_PROXY_COMMON_H 
 
-#include <linux/netdevice.h>
-#include <linux/ethtool.h>
+#define MD5_LEN         4
+#define MAX_STR_LEN     1024
+#define MAX_DEV_LEN     16
+#define MAX_VER_LEN     32
 
-/**
- * nf2_get_settings - get settings for ethtool
- * @dev:	net_device pointer
- * @ecmd: 	ethtool command
- *
- * Use to fill up ethtool values so that ethtool
- * command on the interface will return appropriate
- * values
- */
-static int nf2_get_settings(struct net_device *dev,
-		struct ethtool_cmd *ecmd)
-{
-	ecmd->supported = SUPPORTED_1000baseT_Full |
-		SUPPORTED_MII;
-	ecmd->advertising = ADVERTISED_TP;
-	ecmd->port = PORT_MII;
-	ecmd->speed = SPEED_1000;
-	ecmd->duplex = DUPLEX_FULL;
-	ecmd->autoneg = AUTONEG_DISABLE;
+/* Function declarations */
 
-	return 0;
-}
+void read_info(struct nf2device *nf2);
+void nf2_read_info(struct nf2device *nf2);
+unsigned getCPCIVersion(struct nf2device *nf2);
+unsigned getCPCIRevision(struct nf2device *nf2);
+unsigned getDeviceID(struct nf2device *nf2);
+unsigned getDeviceCPCIVersion(struct nf2device *nf2);
+unsigned getDeviceCPCIRevision(struct nf2device *nf2);
+unsigned getDeviceMajor(struct nf2device *nf2);
+unsigned getDeviceMinor(struct nf2device *nf2);
+unsigned getDeviceRevision(struct nf2device *nf2);
+unsigned getDeviceIDModuleVersion(struct nf2device *nf2);
+const char* getProjDir(struct nf2device *nf2);
+const char* getProjName(struct nf2device *nf2);
+const char* getProjDesc(struct nf2device *nf2);
+const char* getDeviceInfoStr(struct nf2device *nf2);
+int isVirtexProgrammed(struct nf2device *nf2);
+int checkVirtexBitfile(struct nf2device *nf2, char *projDir,
+    int minVerMajor, int minVerMinor, int minVerRev,
+    int maxVerMajor, int maxVerMinor, int maxVerRev);
+const char *getVirtexBitfileErr();
+void prepDeviceInfo(struct nf2device *nf2);
+void printHello (struct nf2device *nf2, int *val);
 
-/**
- * nf2_set_settings - set values passed from ethtool
- * @dev:	net_device pointer
- * @ecmd:	ethtool command
- *
- * Can be used to configure the interface from the
- * parameters passed via ethtool command
- */
-static int nf2_set_settings(struct net_device *dev,
-		struct ethtool_cmd *ecmd)
-{
-	return 0;
-}
-
-static void nf2_get_drvinfo(struct net_device *dev,
-		struct ethtool_drvinfo *drvinfo)
-{
-
-}
-
-static const struct ethtool_ops nf2_ethtool_ops = {
-	.get_settings		= nf2_get_settings,
-	.set_settings		= nf2_set_settings,
-	.get_drvinfo		= nf2_get_drvinfo,
-	.get_link		= ethtool_op_get_link,
-};
-
-void nf2_set_ethtool_ops(struct net_device *dev)
-{
-	dev->ethtool_ops = &nf2_ethtool_ops;
-}
+#endif

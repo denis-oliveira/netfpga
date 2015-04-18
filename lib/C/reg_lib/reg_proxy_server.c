@@ -46,7 +46,6 @@ int main(int argc, char** argv) {
 	int listening_socket;
 	int socket_to_client;
 	int yes_local;
-	int error;
 	in_port_t port_num;
 	struct sockaddr_in local_addr;
 	struct sockaddr_in client_addr;
@@ -278,4 +277,6 @@ int parse_request(int socket_to_client, struct nf2device **nf2devices,
 		fprintf(stderr, "Error: Did not read full reg_request struct.\n");
 		return -1;
 	}
+
+	return 0;
 }

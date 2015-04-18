@@ -39,6 +39,7 @@
  * Usage: ./nf_download <code filename>
  */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,9 +53,9 @@
 #include "nf_download.h"
 #include "../common/nf2.h"
 #include "../common/nf2util.h"
+#include "../common/nf2util_proxy_common.h"
 #include "../common/reg_defines.h"
 #include "../reg_lib/reg_proxy.h"
-
 #include <net/if.h>
 
 #define DEFAULT_IFACE	"nf2c0"
@@ -284,7 +285,7 @@ void DownloadCode(FILE *code_file) {
    code_data = (unsigned char *) malloc(sizeof(unsigned char) * READ_BUFFER_SIZE);
 
    /* check num bytes read */
-   while (code_data_size = fread(code_data, sizeof(unsigned char), READ_BUFFER_SIZE, code_file))
+   while ((code_data_size = fread(code_data, sizeof(unsigned char), READ_BUFFER_SIZE, code_file)))
       {
          if (cpci_reprog)
 	    DownloadCPCICodeBlock(code_data, code_data_size);
@@ -401,10 +402,8 @@ void DownloadVirtexCodeBlock (u_char *code_data, int code_data_size) {
 */
 void DownloadCPCICodeBlock (u_char *code_data, int code_data_size) {
 
-   u_int result;
    u_int data_word;
    int bytes_left;
-   u_int count = 0;
 
    bytes_left = code_data_size;
 
@@ -447,7 +446,7 @@ void VerifyDevInfo(void) {
       nf2_read_info(&nf2);
 
       /* Print the device information */
-      printf(getDeviceInfoStr(&nf2));
+      printf("%s", getDeviceInfoStr(&nf2));
 
       /* Check the CPCI version info */
       if (getDeviceID(&nf2) == -1) {
@@ -553,7 +552,7 @@ void processArgs (int argc, char **argv ) {
             break;
 
 	 case '?':
-	    if (isprint (optopt))
+	    if (isprint(optopt))
                fprintf (stderr, "Unknown option `-%c'.\n", optopt);
 	    else
                fprintf (stderr,

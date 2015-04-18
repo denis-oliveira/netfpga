@@ -40,6 +40,7 @@
  * Description: Test program to dump the CPCI registers
  */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -68,7 +69,6 @@ void display_info(struct nf2device *nf2);
 
 int main(int argc, char *argv[])
 {
-  unsigned val;
 
   nf2.device_name = DEFAULT_IFACE;
 
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
  */
 void display_info(struct nf2device *nf2)
 {
-  printf(getDeviceInfoStr(nf2));
+  printf("%s", getDeviceInfoStr(nf2));
 }
 
 

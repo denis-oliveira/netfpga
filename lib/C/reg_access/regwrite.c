@@ -64,8 +64,6 @@ void usage (void);
 
 int main(int argc, char *argv[])
 {
-	unsigned val;
-
 	nf2.device_name = DEFAULT_IFACE;
 
 	processArgs(argc, argv);

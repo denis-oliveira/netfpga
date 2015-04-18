@@ -61,8 +61,6 @@
 
 /* Global vars */
 static struct nf2device nf2;
-static int verbose = 0;
-static int force_cnet = 0;
 
 /* Function declarations */
 static inline void print (unsigned);
@@ -118,8 +116,7 @@ int main(int argc, char **argv)
 }
 
 static inline void print(unsigned val_in) {
-	unsigned val, val2;
-	int i;
+	unsigned val;
 
 	readReg(&nf2, CPCI_REG_ID, &val);
 	printf("CPCI_REG_ID: %08x\n", val);

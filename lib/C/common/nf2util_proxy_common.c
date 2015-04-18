@@ -38,15 +38,11 @@
 
 #include "../reg_lib/reg_proxy.h"
 #include "../common/reg_defines.h"
+#include "nf2util_proxy_common.h"
 #include <string.h>
 
-#define MD5_LEN         4
-#define MAX_STR_LEN     1024
-#define MAX_DEV_LEN     16
-#define MAX_VER_LEN     32
-
-void prepDeviceInfo(struct nf2device *nf2);
-static void readStr(struct nf2device *nf2, unsigned regStart, unsigned len, char *dst);
+static void readStr(struct nf2device *nf2, unsigned regStart,
+    unsigned len, char *dst);
 
 /* Local variables */
 unsigned cpci_version = -1;

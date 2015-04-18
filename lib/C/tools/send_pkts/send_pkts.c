@@ -65,11 +65,10 @@
 /* Global vars */
 static struct nf2device nf2;
 static int verbose = 0;
-static int force_cnet = 0;
 static int num_pkts = 1;
 static int am_sender = 0;
 static int delay = 0;
-static int exp_total_pkts = 0;
+static long exp_total_pkts = 0;
 static int pkts_rcvd = 0;
 static u_short port = 0x1234;
 static int e_count[65536];
@@ -101,8 +100,6 @@ void millisec_sleep(int );
 
 int main(int argc, char *argv[])
 {
-   unsigned val;
-
    nf2.device_name = DEFAULT_IFACE;
 
 
@@ -286,7 +283,7 @@ void ReceiveSinglePacket(u_char *rcv_finished,
    seq_num = ntohl(seq_num);
 
    // get expected len
-   memcpy(&len, payload+8, sizeof(long));
+   memcpy(&len, payload+8, sizeof(u_int));
    len = ntohl(len);
    // see what len actually arrived
    len_off_wire =  pkthdr->len;
@@ -312,7 +309,7 @@ void ReceiveSinglePacket(u_char *rcv_finished,
 
    percent = (100.0 * pkts_rcvd/ seq_num);
 
-   fprintf(stderr,"total: %6d  seq: %6d dropped: %d    \r",
+   fprintf(stderr,"total: %6ld  seq: %6ld dropped: %ld    \r",
 	   exp_total_pkts, seq_num, (seq_num - pkts_rcvd));
 
    if (seq_num == exp_total_pkts) {
@@ -360,7 +357,7 @@ void processArgs (int argc, char **argv )
 	       break;
 	    case 'c':	/* check packet contents */
 	       check_pkt = 1;
-	       printf("Will check packet on receive.\n", port, port);
+	       printf("Will check packet on port %d receive.\n", port);
 	       break;
 	    case 'l':	/* length in bytes. Default is 0 which means random */
 	       length = atoi(optarg);
@@ -516,7 +513,7 @@ int SendEthernetPacket(char *DA,
    if (libnet_build_ethernet(DA, SA, EtherType, payload, (long) payloadLen, lt, 0) ==
        -1) {
       fprintf(stderr, "ERROR: libnet_build_ethernet failed:\n");
-      if (err = libnet_geterror(lt)) {
+      if ((err = libnet_geterror(lt))) {
 	 fprintf(stderr, "%s\n",err);
       }
    }
